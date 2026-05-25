@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Diabetic Retinopathy Detection</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        .container { display: flex; gap: 20px; }
+        .box { border: 1px solid #ccc; padding: 15px; width: 30%; }
+        img { max-width: 100%; border: 1px solid #ddd; margin-bottom: 10px; }
+        .gan-box { text-align: center; margin-bottom: 20px; }
+        .btn-download { display: inline-block; margin-top: 10px; padding: 8px 12px; background: green; color: white; text-decoration: none; border-radius: 4px; }
+    </style>
+</head>
+<body>
+<h1>Diabetic Retinopathy Detection</h1>
+
+<form method="POST" enctype="multipart/form-data">
+    <input type="file" name="file" required>
+    <button type="submit">Upload & Analyze</button>
+</form>
+
+{% if uploaded_image %}
+<div class="container">
+    <div class="box">
+        <h3>Uploaded Image</h3>
+        <img src="{{ uploaded_image }}" alt="Uploaded Image">
+    </div>
+
+    <div class="box">
+        <h3>CNN Predictions</h3>
+        {% if predictions %}
+            {% for model, pred in predictions.items() %}
+                <p><b>{{ model }}:</b> {{ pred.class }} ({{ pred.confidence }}%)</p>
+            {% endfor %}
+        {% endif %}
+        <h3>Model Accuracies</h3>
+        <ul>
+            {% for model, acc in accuracies.items() %}
+                <li><b>{{ model }}:</b> {{ acc }}%</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="box">
+        <h3>GAN Generated Images</h3>
+        {% for name, path in generated_images.items() %}
+        <div class="gan-box">
+            <h4>{{ name | capitalize }}</h4>
+            <img src="{{ path }}" alt="{{ name }}">
+            <a href="{{ path }}" download class="btn-download">Download {{ name }}</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+</body>
+</html>
